@@ -1,9 +1,17 @@
 import {Component} from 'react';
+import EmployeesService from '../../services/EmployeesService';
+import ErrorMessage from '../errorMessage/ErrorMessage';
+import Spinner from '../spinner/Spinner';
+
+import ErrorBoundary from '../errorBoundary/ErrorBoundary';
+
 import AppInfo from '../app-info/app-info';
 import SearchPanel from '../search-panel/search-panel';
 import AppFilter from '../app-filter/app-filter';
 import EmployeesList from '../employees-list/employees-list';
 import EmployeesAddForm from '../employees-add-form/employees-add-form';
+
+
 import './app.css'
 
 class App extends Component {
@@ -11,16 +19,50 @@ class App extends Component {
     super(props);
 
     this.state = {
-      data: [
-        { name: "John C.",  salary: 800, increase: false, rise: true, id: 1,},
-        { name: "Alex M.",  salary: 3000, increase: true, rise: false, id: 2,}, 
-        { name: "Carl W.",  salary: 5000, increase: false, rise: false, id: 3,}
-      ],
+      data: [],
       term: '',
-      filter: 'all', 
+      filter: 'all',
+      loading: false,
+      error: false 
     }
 
     this.maxId = 4; 
+  }
+
+  employeesService = new EmployeesService();
+
+
+  componentDidMount() {
+    this.updateEmployees()
+  }
+
+  onEmployeesLoaded = (data) => {
+    this.setState({
+      data,
+      loading: false
+    })
+  }
+
+  onEmployeesLoading = () => {
+    this.setState({
+      loading: true
+    })
+  }
+
+  onError = () => {
+    this.setState({
+      loading: false,
+      error: true
+    })
+  }
+
+  updateEmployees = () => {
+    this.onEmployeesLoading();
+
+    this.employeesService
+        .getAllEmployees()
+        .then(this.onEmployeesLoaded)
+        .catch(this.onError)
   }
 
   deleteItem = (id) => {
@@ -141,14 +183,28 @@ class App extends Component {
 
 
   render() {
-    const {data, term, filter} = this.state;
+    const {data, term, filter, error, loading} = this.state;
     const employees = this.state.data.length;
     const increased = this.state.data.filter(item => item.increase).length;
     const visibleData = this.filterPost(this.searchEmp(data, term), filter);
 
+    const empList = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    
+    const content = !(loading || error) ? <EmployeesList 
+            data={visibleData}
+            onDelete = {this.deleteItem}
+            onToggleProp = {this.onToggleProp} 
+            onUpdataSalary = {this.onUpdataSalary}/> : null;
+
+
     return (
+      <>
+      
       <div className="app">
-        <AppInfo employees={employees} increased={increased}/>
+        <ErrorBoundary>
+          <AppInfo employees={employees} increased={increased}/>
+        </ErrorBoundary>
 
         <div className="search-panel">
           <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
@@ -157,14 +213,13 @@ class App extends Component {
             onFilterSelect={this.onFilterSelect} />
         </div>
 
-        
-          <EmployeesList 
-            data={visibleData}
-            onDelete = {this.deleteItem}
-            onToggleProp = {this.onToggleProp} 
-            onUpdataSalary = {this.onUpdataSalary}/>
+          {empList}
+          {spinner}
+          {content}
+
           <EmployeesAddForm onAdd={this.addItem}/>
       </div>
+      </>
     );
   }
 

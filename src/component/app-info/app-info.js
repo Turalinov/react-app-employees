@@ -2,6 +2,7 @@ import './app-info.css';
 
 const AppInfo = ({increased, employees}) => {
 
+  // foo.bar = 1; для проверки ErrorBoundary 
 
   return (
     <div className="app-info">
