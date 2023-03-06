@@ -1,4 +1,5 @@
 import './app-info.css';
+import PropTypes from 'prop-types';
 
 const AppInfo = ({increased, employees}) => {
 
@@ -11,6 +12,11 @@ const AppInfo = ({increased, employees}) => {
       <h2>Премию получат: {increased}</h2>
     </div>
   )
+}
+
+AppInfo.propTypes = {
+  increased: PropTypes.number.isRequired,
+  employees: PropTypes.number.isRequired
 }
 
 export default AppInfo;

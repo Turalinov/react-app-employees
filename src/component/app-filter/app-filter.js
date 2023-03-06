@@ -1,4 +1,5 @@
 import './app-filter.css';
+import PropTypes from 'prop-types';
 
 const AppFilter = (props) => {
 
@@ -29,6 +30,11 @@ const AppFilter = (props) => {
       </div>
     );
   
+}
+
+AppFilter.propTypes = {
+  filter: PropTypes.string.isRequired,
+  onFilterSelect: PropTypes.func.isRequired,
 }
 
 export default AppFilter;

@@ -1,5 +1,7 @@
 import {Component} from 'react';
+import PropTypes from 'prop-types';
 import './search-panel.css';
+
 class SearchPanel extends Component {
   constructor(props) {
     super(props);
@@ -24,6 +26,10 @@ class SearchPanel extends Component {
         onChange={this.onUpdateSearch}/>
     )
   }
+}
+
+SearchPanel.propTypes = {
+  onUpdateSearch: PropTypes.func.isRequired
 }
 
 export default SearchPanel;

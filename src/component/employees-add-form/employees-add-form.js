@@ -1,6 +1,8 @@
 import {Component} from 'react';
 import './employees-add-form.css'
 
+import PropTypes from 'prop-types';
+
 class EmployeesAddForm extends Component {
   constructor(props){
     super(props);
@@ -59,6 +61,10 @@ class EmployeesAddForm extends Component {
       </div>
     )
   }
+}
+
+EmployeesAddForm.propTypes = {
+  onAdd: PropTypes.func.isRequired
 }
 
 export default EmployeesAddForm;

@@ -137,7 +137,7 @@ class App extends Component {
     }))
   }
 
-  onUpdataSalary = (id, value) => {
+  onUpdateSalary = (id, value) => {
     this.setState(({data})=> ({
       data: data.map(item => {
         if (item.id === id) {
@@ -188,14 +188,14 @@ class App extends Component {
     const increased = this.state.data.filter(item => item.increase).length;
     const visibleData = this.filterPost(this.searchEmp(data, term), filter);
 
-    const empList = error ? <ErrorMessage/> : null;
+    const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading ? <Spinner/> : null;
     
     const content = !(loading || error) ? <EmployeesList 
             data={visibleData}
             onDelete = {this.deleteItem}
             onToggleProp = {this.onToggleProp} 
-            onUpdataSalary = {this.onUpdataSalary}/> : null;
+            onUpdateSalary = {this.onUpdateSalary}/> : null;
 
 
     return (
@@ -213,7 +213,7 @@ class App extends Component {
             onFilterSelect={this.onFilterSelect} />
         </div>
 
-          {empList}
+          {errorMessage}
           {spinner}
           {content}
 
